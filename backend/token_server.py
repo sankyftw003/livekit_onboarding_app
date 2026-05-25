@@ -1,21 +1,20 @@
 from dotenv import load_dotenv
 load_dotenv(dotenv_path=".env.local")
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from livekit.api import AccessToken, VideoGrants
 import os, uuid
 
 app = FastAPI()
+
 app.add_middleware(
     CORSMiddleware,
-     allow_origins=[
-        "http://localhost:5173",
-        "https://livekit-onboarding-app-git-main-sankeerth003.vercel.app",
-        "https://*.vercel.app",
-    ],
+    allow_origins=["*"],
     allow_methods=["*"],
-    allow_headers=["*"]
+    allow_headers=["*"],
+    allow_credentials=False,
 )
 
 @app.get("/token")
@@ -27,7 +26,10 @@ async def get_token():
         .with_grants(VideoGrants(room_join=True, room="aura-room"))
         .to_jwt()
     )
-    return {
-        "token": token,
-        "url": os.environ["LIVEKIT_URL"]
-    }
+    return JSONResponse(
+        content={"token": token, "url": os.environ["LIVEKIT_URL"]},
+        headers={
+            "ngrok-skip-browser-warning": "true",
+            "Access-Control-Allow-Origin": "*",
+        }
+    )
