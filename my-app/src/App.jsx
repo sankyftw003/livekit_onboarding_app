@@ -160,7 +160,7 @@ export default function App() {
       const AC = window.AudioContext || window.webkitAudioContext;
       if (AC) await new AC().resume();
 
-      const res = await fetch("http://localhost:8000/token");
+      const res = await fetch(import.meta.env.VITE_TOKEN_URL || "http://localhost:8000/token");
       if (!res.ok) throw new Error("Token fetch failed");
       const { token, url } = await res.json();
 

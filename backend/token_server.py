@@ -9,7 +9,11 @@ import os, uuid
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+     allow_origins=[
+        "http://localhost:5173",
+        "https://livekit-onboarding-app-git-main-sankeerth003.vercel.app",
+        "https://*.vercel.app",
+    ],
     allow_methods=["*"],
     allow_headers=["*"]
 )
